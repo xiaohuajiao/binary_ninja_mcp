@@ -16,6 +16,25 @@ This repository contains a Binary Ninja plugin, MCP server, and bridge that enab
 ### Renaming Functions
 ![Rename Function Demo](docs/mcp-demo-rename.gif)
 
+## Supported Integrations
+
+The following table details which integrations with Binary Ninja are currently supported.
+
+| Function | Description |
+|----------|-------------|
+| `get_binary_status` | Get the current status of the loaded binary. |
+| `list_classes` | List all namespace/class names in the program. |
+| `list_data_items` | List defined data labels and their values. |
+| `list_exports` | List exported functions/symbols. |
+| `list_imports` | List imported symbols in the program. |
+| `list_methods` | List all function names in the program. |
+| `list_namespaces` | List all non-global namespaces in the program. |
+| `list_segments` | List all memory segments in the program. |
+| `rename_data` | Rename a data label at the specified address. |
+| `rename_function` | Rename a function by its current name to a new user-defined name. |
+| `search_functions_by_name` | Search for functions whose name contains the given substring. |
+| `decompile_function` | Decompile a specific function by name and return the decompiled C code. |
+
 ## Prerequisites
 
 - [Binary Ninja](https://binary.ninja/)
