@@ -1,0 +1,15 @@
+{
+    "name": "Binary Ninja MCP",
+    "description": "A Binary Ninja plugin that provides a MCP (Model Context Protocol) server with HTTP endpoints for LLM integration.",
+    "author": "fosdick.io",
+    "version": "0.1.0",
+    "license": {
+        "name": "GPL-3.0",
+        "text": "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version."
+    },
+    "minimumBinaryNinjaVersion": "3164",
+    "api": ["python3"],
+    "dependencies": {},
+    "type": ["core", "helper", "sync"],
+    "platforms": ["Darwin", "Linux", "Windows"]
+} 
