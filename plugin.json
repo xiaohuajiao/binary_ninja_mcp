@@ -10,6 +10,6 @@
     "minimumBinaryNinjaVersion": "3164",
     "api": ["python3"],
     "dependencies": {},
-    "type": ["core", "helper", "sync"],
+    "type": ["architecture", "binaryview", "core", "helper", "sync", "ui"],
     "platforms": ["Darwin", "Linux", "Windows"]
 } 
