@@ -40,7 +40,7 @@ The following table details which integrations with Binary Ninja are currently s
 - [Binary Ninja](https://binary.ninja/)
 - Python 3.x
 - [`uv` package manager](https://docs.astral.sh/uv/) (or your preferred Python package manager)
-- [Claude Desktop](https://claude.ai/download) (for primary integration path)
+- [Claude Desktop](https://claude.ai/download) (or your preferred integration)
 
 ## Installation
 
