@@ -1,23 +1,19 @@
 # Binary Ninja MCP
 
-This repository contains two separate components:
-
-1. A Binary Ninja plugin that provides an MCP server with HTTP endpoints for binary analysis
-2. A MCP bridge that enables seamless integration between Binary Ninja and your MCP client (e.g., Claude Desktop)
-
-## Components
-
-### Binary Ninja Plugin
-The plugin component provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints.  This can be used with any client that implements the MCP protocol.
-
-### MCP Bridge
-A separate bridge component that connects Claude Desktop or your favorite MCP client to the Binary Ninja MCP server.  While Claude Desktop is the primary integration path, the MCP server can be used with other clients.
+This repository contains a Binary Ninja plugin, MCP server, and bridge that enables seamless integration of Binary Ninja's capabilities with your favorite LLM client.
 
 ## Features
 
 - Seamless, real-time integration between Binary Ninja and MCP clients
 - Enhanced reverse engineering workflow with AI assistance
 - Primary support for Claude Desktop as the MCP client, but extensible for other integrations
+
+## Components
+
+This repository contains two separate components:
+
+1. A Binary Ninja plugin that provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints.  This can be used with any client that implements the MCP protocol.
+2. A separate MCP bridge component that connects your favorite MCP client to the Binary Ninja MCP server.  While Claude Desktop is the primary integration path, the MCP server can be used with other clients.
 
 ## Examples
 
