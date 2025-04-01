@@ -110,8 +110,9 @@ Note: Replace `/ABSOLUTE/PATH/TO` with the actual absolute path to your project 
 ### Claude Desktop Integration
 
 1. Open Binary Ninja and install the `Binary Ninja MCP` plugin
-2. In Binary Ninja, open a binary and start the MCP server (`Plugins > MCP Server > Start MCP Server`)
-3. Launch Claude Desktop
+2. Restart Binary Ninja and then open a binary
+3. Start the MCP server (`Plugins > MCP Server > Start MCP Server`)
+4. Launch Claude Desktop
 
 The integration will be automatically available after you open Claude Desktop.
 
