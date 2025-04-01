@@ -8,20 +8,22 @@ This repository contains a Binary Ninja plugin, MCP server, and bridge that enab
 - Enhanced reverse engineering workflow with AI assistance
 - Primary support for Claude Desktop as the MCP client, but extensible for other integrations
 
+## Examples
+
+### Generating a Binary Analysis Report
+
+![Binary Analysis Report Generation](docs/mcp-demo-report.png)
+
+### Renaming Functions
+
+![Rename Function Demo](docs/mcp-demo-rename.gif)
+
 ## Components
 
 This repository contains two separate components:
 
 1. A Binary Ninja plugin that provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints.  This can be used with any client that implements the MCP protocol.
 2. A separate MCP bridge component that connects your favorite MCP client to the Binary Ninja MCP server.  While Claude Desktop is the primary integration path, the MCP server can be used with other clients.
-
-## Examples
-
-### Generating a Binary Analysis Report
-![Binary Analysis Report Generation](docs/mcp-demo-report.png)
-
-### Renaming Functions
-![Rename Function Demo](docs/mcp-demo-rename.gif)
 
 ## Supported Integrations
 
