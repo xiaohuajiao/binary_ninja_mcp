@@ -1,22 +1,23 @@
 # Binary Ninja MCP
 
 This repository contains two separate components:
+
 1. A Binary Ninja plugin that provides an MCP server with HTTP endpoints for binary analysis
-2. A Claude Desktop bridge that enables seamless integration between Binary Ninja and Claude
+2. A MCP bridge that enables seamless integration between Binary Ninja and your MCP client (e.g., Claude Desktop)
 
 ## Components
 
 ### Binary Ninja Plugin
-The plugin component provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints. This can be used with any client that implements the MCP protocol.
+The plugin component provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints.  This can be used with any client that implements the MCP protocol.
 
-### Claude Desktop Bridge
-A separate bridge component that connects Claude Desktop to the Binary Ninja MCP server. While this is the primary integration path, the MCP server can be used with other clients.
+### MCP Bridge
+A separate bridge component that connects Claude Desktop or your favorite MCP client to the Binary Ninja MCP server.  While Claude Desktop is the primary integration path, the MCP server can be used with other clients.
 
 ## Features
 
-- Seamless, real-time integration between Binary Ninja and Claude
+- Seamless, real-time integration between Binary Ninja and MCP clients
 - Enhanced reverse engineering workflow with AI assistance
-- Primary support for Claude Desktop, but extensible for other integrations
+- Primary support for Claude Desktop as the MCP client, but extensible for other integrations
 
 ## Examples
 
@@ -63,7 +64,7 @@ To manually configure the plugin, this repository can be copied into the Binary 
 
 ### Claude Desktop Bridge (Optional)
 
-This is only needed if you want to use the Claude Desktop integration.  Make sure that you have your virtual environment configured first:
+This is only needed if you want to use Claude Desktop as your MCP client.  Make sure that you have your virtual environment configured first:
 
 ```bash
 git clone git@github.com:fosdickio/binary_ninja_mcp.git
@@ -85,7 +86,7 @@ On a Mac, you can automate the setup by running:
 
 #### Manual Configuration
 
-On other operating systems or to manually setup the Claude Desktop integration:
+On other operating systems or to manually configure the Claude Desktop integration:
 
 1. Navigate to `Settings > Developer > Edit Config`
 2. Add the following configuration:
@@ -107,7 +108,7 @@ Note: Replace `/ABSOLUTE/PATH/TO` with the actual absolute path to your project 
 
 ## Usage
 
-### Claude Desktop Integration
+### Claude Desktop
 
 1. Open Binary Ninja and install the `Binary Ninja MCP` plugin
 2. Restart Binary Ninja and then open a binary
@@ -125,9 +126,9 @@ You may now start prompting Claude about the currently open binary.  Example pro
 - "List all functions in the current binary."
 - "What is the status of the loaded binary?"
 
-### Other Integration Paths
+### Other MCP Client Integrations
 
-The bridge can be used with other interfaces by implementing the appropriate integration layer.
+The bridge can be used with other MCP clients by implementing the appropriate integration layer.
 
 ## Development
 
