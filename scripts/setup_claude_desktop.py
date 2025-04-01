@@ -42,14 +42,14 @@ def setup_claude_desktop():
             config = json.load(f)
 
         current_dir = Path(__file__).parent.parent.absolute()
-        src_dir = current_dir / "src"
+        src_dir = current_dir / "bridge"
 
         if "mcpServers" not in config:
             config["mcpServers"] = {}
 
         config["mcpServers"]["binary_ninja_mcp"] = {
-            "command": "uv",
-            "args": ["--directory", str(src_dir), "run", "binja_mcp_bridge.py"],
+            "command": str(Path.cwd() / ".venv" / "bin" / "python"),
+            "args": [str(src_dir / "binja_mcp_bridge.py")],
         }
 
         with open(config_path, "w") as f:

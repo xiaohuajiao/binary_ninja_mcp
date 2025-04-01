@@ -1,6 +1,16 @@
 # Binary Ninja MCP
 
-This repository contains a Binary Ninja plugin, MCP server, and bridge that enables seamless integration of Binary Ninja's capabilities with LLM assistance. While primarily tested as a Claude Desktop integration, the bridge can be used with other interfaces.
+This repository contains two separate components:
+1. A Binary Ninja plugin that provides an MCP server with HTTP endpoints for binary analysis
+2. A Claude Desktop bridge that enables seamless integration between Binary Ninja and Claude
+
+## Components
+
+### Binary Ninja Plugin
+The plugin component provides an MCP server that exposes Binary Ninja's capabilities through HTTP endpoints. This can be used with any client that implements the MCP protocol.
+
+### Claude Desktop Bridge
+A separate bridge component that connects Claude Desktop to the Binary Ninja MCP server. While this is the primary integration path, the MCP server can be used with other clients.
 
 ## Features
 
@@ -38,64 +48,84 @@ The following table details which integrations with Binary Ninja are currently s
 ## Prerequisites
 
 - [Binary Ninja](https://binary.ninja/)
-- Python 3.x
-- [`uv` package manager](https://docs.astral.sh/uv/) (or your preferred Python package manager)
+- Python 3.12+
 - [Claude Desktop](https://claude.ai/download) (or your preferred integration)
 
 ## Installation
 
-### 1. Clone the repository
+### Binary Ninja Plugin
+
+You may install the plugin through Binary Ninja's Plugin Manager (`Plugins > Manage Plugins`).
+
+![Plugin Manager Listing](docs/plugin-manager-listing.png)
+
+To manually configure the plugin, this repository can be copied into the Binary Ninja plugins folder.
+
+### Claude Desktop Bridge (Optional)
+
+This is only needed if you want to use the Claude Desktop integration.  Make sure that you have your virtual environment configured first:
 
 ```bash
 git clone git@github.com:fosdickio/binary_ninja_mcp.git
 cd binary_ninja_mcp
+
+python3 -m venv .venv
+source .venv/bin/activate   # On macOS/Linux
+
+pip install -r bridge/requirements.txt
 ```
 
-### 2. Install dependencies using `uv`
+#### Automated Configuration (Mac)
+
+On a Mac, you can automate the setup by running:
 
 ```bash
-uv venv
-source .venv/bin/activate  # On macOS/Linux
-uv pip install -e .
+./scripts/setup_claude_desktop.py
 ```
 
-### 3. For Claude Desktop integration (optional)
+#### Manual Configuration
 
-On macOS, you can run the following setup script:
-```bash
-python scripts/setup.py
-```
+On other operating systems or to manually setup the Claude Desktop integration:
 
-On other platforms, in Claude Desktop, navigate to `Settings > Developer > Edit Config` and add the following:
+1. Navigate to `Settings > Developer > Edit Config`
+2. Add the following configuration:
 
 ```json
 {
   "mcpServers": {
-    "binaryninja_mcp": {
-      "command": "uv",
+    "binary_ninja_mcp": {
+      "command": "/ABSOLUTE/PATH/TO/binary_ninja_mcp/.venv/bin/python",
       "args": [
-        "--directory",
-        "ABSOLUTE_PATH_TO_DIR/binary_ninja_mcp/src",
-        "run",
-        "binja_mcp_bridge.py"
+        "/ABSOLUTE/PATH/TO/binary_ninja_mcp/bridge/binja_mcp_bridge.py"
       ]
     }
   }
 }
 ```
 
-This will configure Claude Desktop to work with the Binary Ninja MCP bridge and server.
+Note: Replace `/ABSOLUTE/PATH/TO` with the actual absolute path to your project directory. The virtual environment's Python interpreter must be used to access the installed dependencies.
 
 ## Usage
 
 ### Claude Desktop Integration
 
-1. Launch Claude Desktop
-2. Open Binary Ninja and install the `Binary Ninja MCP` plugin
-3. In Binary Ninja, open a binary and start the MCP server (`Plugins > MCP Server > Start MCP Server`)
-3. The integration will be automatically available when you interact with Claude Desktop
+1. Open Binary Ninja and install the `Binary Ninja MCP` plugin
+2. In Binary Ninja, open a binary and start the MCP server (`Plugins > MCP Server > Start MCP Server`)
+3. Launch Claude Desktop
+
+The integration will be automatically available after you open Claude Desktop.
+
+![Claude Integration](docs/claude-desktop-integration.png)
+
+You may now start prompting Claude about the currently open binary.  Example prompts:
+
+- "Generate a binary analysis report for the current binary."
+- "Rename function X to Y in the current binary."
+- "List all functions in the current binary."
+- "What is the status of the loaded binary?"
 
 ### Other Integration Paths
+
 The bridge can be used with other interfaces by implementing the appropriate integration layer.
 
 ## Development
@@ -104,14 +134,12 @@ The project structure is organized as follows:
 
 ```
 binary_ninja_mcp/
-├── src/
-│   ├── binja_mcp_bridge.py      # Main bridge implementation
+├── bridge/                      # Claude Desktop integration
+├── plugin/                      # Binary Ninja plugin
 ├── scripts/
 │   └── setup_claude_desktop.py  # Setup script for Claude Desktop
-├── plugins/                     # Binary Ninja plugin
-└── pyproject.toml               # Project configuration and dependencies
 ```
-
 ## Contributing
 
 Contributions are welcome. Please feel free to submit a pull request.
+
