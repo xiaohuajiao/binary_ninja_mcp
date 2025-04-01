@@ -1,4 +1,4 @@
-# Binary Ninja MCP
+# Binary Ninja MCP <img src="images/binja.png" height="24" style="margin-left: 5px; vertical-align: middle;">
 
 This repository contains a Binary Ninja plugin, MCP server, and bridge that enables seamless integration of Binary Ninja's capabilities with your favorite LLM client.
 
@@ -12,11 +12,11 @@ This repository contains a Binary Ninja plugin, MCP server, and bridge that enab
 
 ### Generating a Binary Analysis Report
 
-![Binary Analysis Report Generation](docs/mcp-demo-report.png)
+![Binary Analysis Report Generation](images/mcp-demo-report.png)
 
 ### Renaming Functions
 
-![Rename Function Demo](docs/mcp-demo-rename.gif)
+![Rename Function Demo](images/mcp-demo-rename.gif)
 
 ## Components
 
@@ -56,7 +56,7 @@ The following table details which integrations with Binary Ninja are currently s
 
 You may install the plugin through Binary Ninja's Plugin Manager (`Plugins > Manage Plugins`).
 
-![Plugin Manager Listing](docs/plugin-manager-listing.png)
+![Plugin Manager Listing](images/plugin-manager-listing.png)
 
 To manually configure the plugin, this repository can be copied into the Binary Ninja plugins folder.
 
@@ -115,7 +115,7 @@ Note: Replace `/ABSOLUTE/PATH/TO` with the actual absolute path to your project 
 
 The integration will be automatically available after you open Claude Desktop.
 
-![Claude Integration](docs/claude-desktop-integration.png)
+![Claude Integration](images/claude-desktop-integration.png)
 
 You may now start prompting Claude about the currently open binary.  Example prompts:
 
@@ -134,7 +134,7 @@ The project structure is organized as follows:
 
 ```
 binary_ninja_mcp/
-├── bridge/                      # Claude Desktop integration
+├── bridge/                      # MCP client integration
 ├── plugin/                      # Binary Ninja plugin
 ├── scripts/
 │   └── setup_claude_desktop.py  # Setup script for Claude Desktop
