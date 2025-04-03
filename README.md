@@ -43,6 +43,12 @@ The following table details which integrations with Binary Ninja are currently s
 | `rename_function` | Rename a function by its current name to a new user-defined name. |
 | `search_functions_by_name` | Search for functions whose name contains the given substring. |
 | `decompile_function` | Decompile a specific function by name and return the decompiled C code. |
+| `set_comment` | Set a comment at a specific address. |
+| `set_function_comment` | Set a comment for a function. |
+| `get_comment` | Get the comment at a specific address. |
+| `get_function_comment` | Get the comment for a function. |
+| `delete_comment` | Delete the comment at a specific address. |
+| `delete_function_comment` | Delete the comment for a function. |
 
 ## Prerequisites
 
