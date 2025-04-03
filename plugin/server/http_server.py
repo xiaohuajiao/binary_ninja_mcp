@@ -175,6 +175,272 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
 
                 self._handle_decompile(function_name)
 
+            elif path == "/comment":
+                if self.command == "GET":
+                    address = params.get("address")
+                    if not address:
+                        self._send_json_response(
+                            {
+                                "error": "Missing address parameter",
+                                "help": "Required parameter: address",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        comment = self.binary_ops.get_comment(address_int)
+                        if comment is not None:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "address": hex(address_int),
+                                    "comment": comment,
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "address": hex(address_int),
+                                    "comment": None,
+                                    "message": "No comment found at this address",
+                                }
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+                elif self.command == "DELETE":
+                    address = params.get("address")
+                    if not address:
+                        self._send_json_response(
+                            {
+                                "error": "Missing address parameter",
+                                "help": "Required parameter: address",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        success = self.binary_ops.delete_comment(address_int)
+                        if success:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "message": f"Successfully deleted comment at {hex(address_int)}",
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "error": "Failed to delete comment",
+                                    "message": "The comment could not be deleted at the specified address.",
+                                },
+                                500,
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+                else:  # POST
+                    address = params.get("address")
+                    comment = params.get("comment")
+                    if not address or comment is None:
+                        self._send_json_response(
+                            {
+                                "error": "Missing parameters",
+                                "help": "Required parameters: address and comment",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        success = self.binary_ops.set_comment(address_int, comment)
+                        if success:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "message": f"Successfully set comment at {hex(address_int)}",
+                                    "comment": comment,
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "error": "Failed to set comment",
+                                    "message": "The comment could not be set at the specified address.",
+                                },
+                                500,
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+
+            elif path == "/comment/function":
+                if self.command == "GET":
+                    function_name = params.get("name") or params.get("functionName")
+                    if not function_name:
+                        self._send_json_response(
+                            {
+                                "error": "Missing function name parameter",
+                                "help": "Required parameter: name (or functionName)",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    comment = self.binary_ops.get_function_comment(function_name)
+                    if comment is not None:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "function": function_name,
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "function": function_name,
+                                "comment": None,
+                                "message": "No comment found for this function",
+                            }
+                        )
+                elif self.command == "DELETE":
+                    function_name = params.get("name") or params.get("functionName")
+                    if not function_name:
+                        self._send_json_response(
+                            {
+                                "error": "Missing function name parameter",
+                                "help": "Required parameter: name (or functionName)",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    success = self.binary_ops.delete_function_comment(function_name)
+                    if success:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "message": f"Successfully deleted comment for function {function_name}",
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "error": "Failed to delete function comment",
+                                "message": "The comment could not be deleted for the specified function.",
+                            },
+                            500,
+                        )
+                else:  # POST
+                    function_name = params.get("name") or params.get("functionName")
+                    comment = params.get("comment")
+                    if not function_name or comment is None:
+                        self._send_json_response(
+                            {
+                                "error": "Missing parameters",
+                                "help": "Required parameters: name (or functionName) and comment",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    success = self.binary_ops.set_function_comment(function_name, comment)
+                    if success:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "message": f"Successfully set comment for function {function_name}",
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "error": "Failed to set function comment",
+                                "message": "The comment could not be set for the specified function.",
+                            },
+                            500,
+                        )
+
+            elif path == "/getComment":
+                address = params.get("address")
+                if not address:
+                    self._send_json_response(
+                        {
+                            "error": "Missing address parameter",
+                            "help": "Required parameter: address",
+                            "received": params,
+                        },
+                        400,
+                    )
+                    return
+
+                try:
+                    address_int = int(address, 16) if isinstance(address, str) else int(address)
+                    comment = self.binary_ops.get_comment(address_int)
+                    if comment is not None:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "address": hex(address_int),
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "address": hex(address_int),
+                                "comment": None,
+                                "message": "No comment found at this address",
+                            }
+                        )
+                except ValueError:
+                    self._send_json_response({"error": "Invalid address format"}, 400)
+
+            elif path == "/getFunctionComment":
+                function_name = params.get("name") or params.get("functionName")
+                if not function_name:
+                    self._send_json_response(
+                        {
+                            "error": "Missing function name parameter",
+                            "help": "Required parameter: name (or functionName)",
+                            "received": params,
+                        },
+                        400,
+                    )
+                    return
+
+                comment = self.binary_ops.get_function_comment(function_name)
+                if comment is not None:
+                    self._send_json_response(
+                        {
+                            "success": True,
+                            "function": function_name,
+                            "comment": comment,
+                        }
+                    )
+                else:
+                    self._send_json_response(
+                        {
+                            "success": True,
+                            "function": function_name,
+                            "comment": None,
+                            "message": "No comment found for this function",
+                        }
+                    )
+
             else:
                 self._send_json_response({"error": "Not found"}, 404)
 
@@ -342,65 +608,271 @@ class MCPRequestHandler(BaseHTTPRequestHandler):
                 except ValueError:
                     self._send_json_response({"error": "Invalid address format"}, 400)
 
-            elif path == "/decompile":
-                function_name = None
-
-                # Try to get function name from various possible sources
-                if isinstance(params, dict):
-                    function_name = (
-                        params.get("functionName")
-                        or params.get("name")
-                        or params.get("function")
-                        or params.get("data")
-                    )
-
-                    # If we got an error from parameter parsing, report it
-                    if isinstance(function_name, dict) and "error" in function_name:
+            elif path == "/comment":
+                if self.command == "GET":
+                    address = params.get("address")
+                    if not address:
                         self._send_json_response(
                             {
-                                "error": "Invalid parameter format",
-                                "details": function_name["error"],
+                                "error": "Missing address parameter",
+                                "help": "Required parameter: address",
                                 "received": params,
                             },
                             400,
                         )
                         return
 
-                elif isinstance(params, str):
-                    function_name = params.strip()
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        comment = self.binary_ops.get_comment(address_int)
+                        if comment is not None:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "address": hex(address_int),
+                                    "comment": comment,
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "address": hex(address_int),
+                                    "comment": None,
+                                    "message": "No comment found at this address",
+                                }
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+                elif self.command == "DELETE":
+                    address = params.get("address")
+                    if not address:
+                        self._send_json_response(
+                            {
+                                "error": "Missing address parameter",
+                                "help": "Required parameter: address",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
 
-                bn.log_info(f"Extracted function name: {function_name}")
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        success = self.binary_ops.delete_comment(address_int)
+                        if success:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "message": f"Successfully deleted comment at {hex(address_int)}",
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "error": "Failed to delete comment",
+                                    "message": "The comment could not be deleted at the specified address.",
+                                },
+                                500,
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+                else:  # POST
+                    address = params.get("address")
+                    comment = params.get("comment")
+                    if not address or comment is None:
+                        self._send_json_response(
+                            {
+                                "error": "Missing parameters",
+                                "help": "Required parameters: address and comment",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
 
-                if not function_name:
+                    try:
+                        address_int = int(address, 16) if isinstance(address, str) else int(address)
+                        success = self.binary_ops.set_comment(address_int, comment)
+                        if success:
+                            self._send_json_response(
+                                {
+                                    "success": True,
+                                    "message": f"Successfully set comment at {hex(address_int)}",
+                                    "comment": comment,
+                                }
+                            )
+                        else:
+                            self._send_json_response(
+                                {
+                                    "error": "Failed to set comment",
+                                    "message": "The comment could not be set at the specified address.",
+                                },
+                                500,
+                            )
+                    except ValueError:
+                        self._send_json_response({"error": "Invalid address format"}, 400)
+
+            elif path == "/comment/function":
+                if self.command == "GET":
+                    function_name = params.get("name") or params.get("functionName")
+                    if not function_name:
+                        self._send_json_response(
+                            {
+                                "error": "Missing function name parameter",
+                                "help": "Required parameter: name (or functionName)",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    comment = self.binary_ops.get_function_comment(function_name)
+                    if comment is not None:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "function": function_name,
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "function": function_name,
+                                "comment": None,
+                                "message": "No comment found for this function",
+                            }
+                        )
+                elif self.command == "DELETE":
+                    function_name = params.get("name") or params.get("functionName")
+                    if not function_name:
+                        self._send_json_response(
+                            {
+                                "error": "Missing function name parameter",
+                                "help": "Required parameter: name (or functionName)",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    success = self.binary_ops.delete_function_comment(function_name)
+                    if success:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "message": f"Successfully deleted comment for function {function_name}",
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "error": "Failed to delete function comment",
+                                "message": "The comment could not be deleted for the specified function.",
+                            },
+                            500,
+                        )
+                else:  # POST
+                    function_name = params.get("name") or params.get("functionName")
+                    comment = params.get("comment")
+                    if not function_name or comment is None:
+                        self._send_json_response(
+                            {
+                                "error": "Missing parameters",
+                                "help": "Required parameters: name (or functionName) and comment",
+                                "received": params,
+                            },
+                            400,
+                        )
+                        return
+
+                    success = self.binary_ops.set_function_comment(function_name, comment)
+                    if success:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "message": f"Successfully set comment for function {function_name}",
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "error": "Failed to set function comment",
+                                "message": "The comment could not be set for the specified function.",
+                            },
+                            500,
+                        )
+
+            elif path == "/getComment":
+                address = params.get("address")
+                if not address:
                     self._send_json_response(
                         {
-                            "error": "Missing function name parameter",
-                            "help": "Send the function name using one of these formats:",
-                            "formats": [
-                                "POST /decompile with JSON body: {'name': 'function_name'}",
-                                "POST /decompile with form data: name=function_name",
-                                "POST /decompile with raw text: function_name",
-                                "GET /decompile?name=function_name",
-                            ],
-                            "received_params": params,
-                            "available_functions": self.binary_ops.get_function_names(
-                                0, 10
-                            ),
+                            "error": "Missing address parameter",
+                            "help": "Required parameter: address",
+                            "received": params,
                         },
                         400,
                     )
                     return
 
-                # Handle function@address format
-                if "@" in str(function_name):
-                    name, addr = function_name.split("@")
-                    try:
-                        addr_int = int(addr, 16) if addr.startswith("0x") else int(addr)
-                        function_name = addr_int
-                    except ValueError:
-                        function_name = name
+                try:
+                    address_int = int(address, 16) if isinstance(address, str) else int(address)
+                    comment = self.binary_ops.get_comment(address_int)
+                    if comment is not None:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "address": hex(address_int),
+                                "comment": comment,
+                            }
+                        )
+                    else:
+                        self._send_json_response(
+                            {
+                                "success": True,
+                                "address": hex(address_int),
+                                "comment": None,
+                                "message": "No comment found at this address",
+                            }
+                        )
+                except ValueError:
+                    self._send_json_response({"error": "Invalid address format"}, 400)
 
-                self._handle_decompile(function_name)
+            elif path == "/getFunctionComment":
+                function_name = params.get("name") or params.get("functionName")
+                if not function_name:
+                    self._send_json_response(
+                        {
+                            "error": "Missing function name parameter",
+                            "help": "Required parameter: name (or functionName)",
+                            "received": params,
+                        },
+                        400,
+                    )
+                    return
+
+                comment = self.binary_ops.get_function_comment(function_name)
+                if comment is not None:
+                    self._send_json_response(
+                        {
+                            "success": True,
+                            "function": function_name,
+                            "comment": comment,
+                        }
+                    )
+                else:
+                    self._send_json_response(
+                        {
+                            "success": True,
+                            "function": function_name,
+                            "comment": None,
+                            "message": "No comment found for this function",
+                        }
+                    )
 
             else:
                 self._send_json_response({"error": "Not found"}, 404)

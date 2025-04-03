@@ -89,6 +89,38 @@ def rename_data(address: str, new_name: str) -> str:
 
 
 @mcp.tool()
+def set_comment(address: str, comment: str) -> str:
+    """
+    Set a comment at a specific address.
+    """
+    return safe_post("comment", {"address": address, "comment": comment})
+
+
+@mcp.tool()
+def set_function_comment(function_name: str, comment: str) -> str:
+    """
+    Set a comment for a function.
+    """
+    return safe_post("comment/function", {"name": function_name, "comment": comment})
+
+
+@mcp.tool()
+def get_comment(address: str) -> str:
+    """
+    Get the comment at a specific address.
+    """
+    return safe_get("comment", {"address": address})[0]
+
+
+@mcp.tool()
+def get_function_comment(function_name: str) -> str:
+    """
+    Get the comment for a function.
+    """
+    return safe_get("comment/function", {"name": function_name})[0]
+
+
+@mcp.tool()
 def list_segments(offset: int = 0, limit: int = 100) -> list:
     """
     List all memory segments in the program with pagination.
@@ -146,6 +178,22 @@ def get_binary_status() -> str:
     Get the current status of the loaded binary.
     """
     return safe_get("status")[0]
+
+
+@mcp.tool()
+def delete_comment(address: str) -> str:
+    """
+    Delete the comment at a specific address.
+    """
+    return safe_post("comment", {"address": address, "_method": "DELETE"})
+
+
+@mcp.tool()
+def delete_function_comment(function_name: str) -> str:
+    """
+    Delete the comment for a function.
+    """
+    return safe_post("comment/function", {"name": function_name, "_method": "DELETE"})
 
 
 if __name__ == "__main__":
