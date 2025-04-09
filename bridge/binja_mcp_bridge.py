@@ -3,30 +3,30 @@ import requests
 
 
 binja_server_url = "http://localhost:9009"
-mcp = FastMCP("binja-mcp")
+mcp = FastMCP("binja-mcp", log_level="ERROR")
 
 
-def safe_get(endpoint: str, params: dict = None) -> list:
-    """
-    Perform a GET request. If 'params' is given, we convert it to a query string.
-    """
-    if params is None:
-        params = {}
-    qs = [f"{k}={v}" for k, v in params.items()]
-    query_string = "&".join(qs)
-    url = f"{binja_server_url}/{endpoint}"
-    if query_string:
-        url += "?" + query_string
+# def safe_get(endpoint: str, params: dict = None) -> list:
+#     """
+#     Perform a GET request. If 'params' is given, we convert it to a query string.
+#     """
+#     if params is None:
+#         params = {}
+#     qs = [f"{k}={v}" for k, v in params.items()]
+#     query_string = "&".join(qs)
+#     url = f"{binja_server_url}/{endpoint}"
+#     if query_string:
+#         url += "?" + query_string
 
-    try:
-        response = requests.get(url, timeout=5)
-        response.encoding = "utf-8"
-        if response.ok:
-            return response.text.splitlines()
-        else:
-            return [f"Error {response.status_code}: {response.text.strip()}"]
-    except Exception as e:
-        return [f"Request failed: {str(e)}"]
+#     try:
+#         response = requests.get(url, timeout=5)
+#         response.encoding = "utf-8"
+#         if response.ok:
+#             return response.text.splitlines()
+#         else:
+#             return [f"Error {response.status_code}: {response.text.strip()}"]
+#     except Exception as e:
+#         return [f"Request failed: {str(e)}"]
 
 
 def safe_post(endpoint: str, data: dict | str) -> str:
@@ -53,7 +53,7 @@ def list_methods(offset: int = 0, limit: int = 100) -> list:
     """
     List all function names in the program with pagination.
     """
-    return safe_get("methods", {"offset": offset, "limit": limit})
+    return safe_post("methods", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -61,7 +61,7 @@ def list_classes(offset: int = 0, limit: int = 100) -> list:
     """
     List all namespace/class names in the program with pagination.
     """
-    return safe_get("classes", {"offset": offset, "limit": limit})
+    return safe_post("classes", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -109,7 +109,7 @@ def get_comment(address: str) -> str:
     """
     Get the comment at a specific address.
     """
-    return safe_get("comment", {"address": address})[0]
+    return safe_post("comment", {"address": address})[0]
 
 
 @mcp.tool()
@@ -117,7 +117,7 @@ def get_function_comment(function_name: str) -> str:
     """
     Get the comment for a function.
     """
-    return safe_get("comment/function", {"name": function_name})[0]
+    return safe_post("comment/function", {"name": function_name})[0]
 
 
 @mcp.tool()
@@ -125,7 +125,7 @@ def list_segments(offset: int = 0, limit: int = 100) -> list:
     """
     List all memory segments in the program with pagination.
     """
-    return safe_get("segments", {"offset": offset, "limit": limit})
+    return safe_post("segments", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -133,7 +133,7 @@ def list_imports(offset: int = 0, limit: int = 100) -> list:
     """
     List imported symbols in the program with pagination.
     """
-    return safe_get("imports", {"offset": offset, "limit": limit})
+    return safe_post("imports", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -141,7 +141,7 @@ def list_exports(offset: int = 0, limit: int = 100) -> list:
     """
     List exported functions/symbols with pagination.
     """
-    return safe_get("exports", {"offset": offset, "limit": limit})
+    return safe_post("exports", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -149,7 +149,7 @@ def list_namespaces(offset: int = 0, limit: int = 100) -> list:
     """
     List all non-global namespaces in the program with pagination.
     """
-    return safe_get("namespaces", {"offset": offset, "limit": limit})
+    return safe_post("namespaces", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -157,7 +157,7 @@ def list_data_items(offset: int = 0, limit: int = 100) -> list:
     """
     List defined data labels and their values with pagination.
     """
-    return safe_get("data", {"offset": offset, "limit": limit})
+    return safe_post("data", {"offset": offset, "limit": limit})
 
 
 @mcp.tool()
@@ -167,7 +167,7 @@ def search_functions_by_name(query: str, offset: int = 0, limit: int = 100) -> l
     """
     if not query:
         return ["Error: query string is required"]
-    return safe_get(
+    return safe_post(
         "searchFunctions", {"query": query, "offset": offset, "limit": limit}
     )
 
@@ -177,7 +177,7 @@ def get_binary_status() -> str:
     """
     Get the current status of the loaded binary.
     """
-    return safe_get("status")[0]
+    return safe_post("status")[0]
 
 
 @mcp.tool()
